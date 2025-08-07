@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox Pro - Advanced Utility Tools</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #232526 0%, #414345 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --accent-color: #00f2fe;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+        }
+
+        /* 3D Floating Elements */
+        .floating-shape {
+            position: absolute;
+            background: linear-gradient(45deg, var(--accent-color), #667eea);
+            border-radius: 20px;
+            filter: blur(40px);
+            opacity: 0.1;
+            animation: floatShape 8s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 300px;
+            height: 300px;
+            top: 60%;
+            right: 5%;
+            animation-delay: 2s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 40px rgba(102, 126, 234, 0.5);
+            animation: textGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(102, 126, 234, 0.8)); }
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .tool-card:hover::before {
+            opacity: 1;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.3),
+                0 0 100px rgba(102, 126, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tool-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: var(--secondary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-card h3::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--accent-color);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 0 30px rgba(0, 242, 254, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .result {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-gradient);
+        }
+
+        .result.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+        }
+
+        .result.success::before {
+            background: var(--success-color);
+        }
+
+        .result.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .result.error::before {
+            background: var(--error-color);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Custom Checkbox Styles */
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 0.5rem;
+            accent-color: var(--accent-color);
+        }
+
+        /* Range Slider Styles */
+        input[type="range"] {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scroll animations */
+        .tool-card {
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .tool-card:nth-child(1) { animation-delay: 0.1s; }
+        .tool-card:nth-child(2) { animation-delay: 0.2s; }
+        .tool-card:nth-child(3) { animation-delay: 0.3s; }
+        .tool-card:nth-child(4) { animation-delay: 0.4s; }
+        .tool-card:nth-child(5) { animation-delay: 0.5s; }
+        .tool-card:nth-child(6) { animation-delay: 0.6s; }
+        .tool-card:nth-child(7) { animation-delay: 0.7s; }
+        .tool-card:nth-child(8) { animation-delay: 0.8s; }
+        .tool-card:nth-child(9) { animation-delay: 0.9s; }
+        .tool-card:nth-child(10) { animation-delay: 1.0s; }
+        .tool-card:nth-child(11) { animation-delay: 1.1s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .tool-card {
+                padding: 2rem;
+            }
+
+            .tool-card:hover {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.5rem;
+            background: var(--success-color);
+            box-shadow: 0 0 10px var(--success-color);
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        .status-indicator.error {
+            background: var(--error-color);
+            box-shadow: 0 0 10px var(--error-color);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Glassmorphism navigation dots */
+        .nav-dots {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-dot:hover, .nav-dot.active {
+            background: var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+            .nav-dots {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Effects -->
+    <div class="bg-particles" id="particles"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+
+    <!-- Navigation Dots -->
+    <div class="nav-dots">
+        <div class="nav-dot active" onclick="scrollToSection('header')"></div>
+        <div class="nav-dot" onclick="scrollToSection('tools')"></div>
+    </div>
+
+    <header class="header" id="header">
+        <h1>ToolBox Pro</h1>
+        <p>Advanced Utility Tools with Cutting-Edge Design</p>
+    </header>
+
+    <div class="container" id="tools">
+        <div class="tools-grid">
+            <!-- Credit Card Validator -->
+            <div class="tool-card">
+                <h3>💳 Credit Card Validator</h3>
+                <div class="form-group">
+                    <label for="ccNumber">Credit Card Number</label>
+                    <input type="text" id="ccNumber" placeholder="Enter credit card number" maxlength="19">
+                </div>
+                <button class="btn" onclick="validateCreditCard()">
+                    <span>Validate Card</span>
+                </button>
+                <div id="ccResult" class="result"></div>
+            </div>
+
+            <!-- VIN Decoder -->
+            <div class="tool-card">
+                <h3>🚗 VIN Decoder</h3>
+                <div class="form-group">
+                    <label for="vinNumber">Vehicle Identification Number</label>
+                    <input type="text" id="vinNumber" placeholder="Enter 17-character VIN" maxlength="17">
+                </div>
+                <button class="btn" onclick="decodeVIN()">
+                    <span>Decode VIN</span>
+                </button>
+                <div id="vinResult" class="result"></div>
+            </div>
+
+            <!-- BIN Checker -->
+            <div class="tool-card">
+                <h3>🏦 BIN Checker</h3>
+                <div class="form-group">
+                    <label for="binNumber">Bank Identification Number</label>
+                    <input type="text" id="binNumber" placeholder="Enter first 6 digits" maxlength="6">
+                </div>
+                <button class="btn" onclick="checkBIN()">
+                    <span>Check BIN</span>
+                </button>
+                <div id="binResult" class="result"></div>
+            </div>
+
+            <!-- Time Zone Converter -->
+            <div class="tool-card">
+                <h3>🌍 Time Zone Converter</h3>
+                <div class="form-group">
+                    <label for="timeInput">Select Date & Time</label>
+                    <input type="datetime-local" id="timeInput">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="fromTZ">From Timezone</label>
+                        <select id="fromTZ">
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Europe/London">London</option>
+                            <option value="Asia/Tokyo">Tokyo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toTZ">To Timezone</label>
+                        <select id="toTZ">
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Europe/London">London</option>
+                            <option value="Asia/Tokyo">Tokyo</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="convertTime()">
+                    <span>Convert Time</span>
+                </button>
+                <div id="timeResult" class="result"></div>
+            </div>
+
+            <!-- Text Case Converter -->
+            <div class="tool-card">
+                <h3>📝 Text Case Converter</h3>
+                <div class="form-group">
+                    <label for="textInput">Enter Your Text</label>
+                    <textarea id="textInput" rows="3" placeholder="Type or paste your text here..."></textarea>
+                </div>
+                <div class="grid-2">
+                    <button class="btn" onclick="convertCase('upper')">UPPERCASE</button>
+                    <button class="btn" onclick="convertCase('lower')">lowercase</button>
+                    <button class="btn" onclick="convertCase('title')">Title Case</button>
+                    <button class="btn" onclick="convertCase('sentence')">Sentence case</button>
+                </div>
+                <div id="textResult" class="result"></div>
+            </div>
+
+            <!-- US States & Capitals -->
+            <div class="tool-card">
+                <h3>🗺️ US States & Capitals</h3>
+                <div class="form-group">
+                    <label for="stateSelect">Select State</label>
+                    <select id="stateSelect">
+                        <option value="">Choose a state...</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="showCapital()">
+                    <span>Show Capital</span>
+                </button>
+                <div id="capitalResult" class="result"></div>
+            </div>
+
+            <!-- US Address Formatter -->
+            <div class="tool-card">
+                <h3>🏠 US Address Formatter</h3>
+                <div class="form-group">
+                    <label for="addressLine1">Street Address</label>
+                    <input type="text" id="addressLine1" placeholder="123 Main Street">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" placeholder="New York">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State</label>
+                        <input type="text" id="state" placeholder="NY" maxlength="2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code</label>
+                    <input type="text" id="zipCode" placeholder="10001">
+                </div>
+                <button class="btn" onclick="formatAddress()">
+                    <span>Format Address</span>
+                </button>
+                <div id="addressResult" class="result"></div>
+            </div>
+
+            <!-- ZIP Code Lookup -->
+            <div class="tool-card">
+                <h3>📮 ZIP Code Lookup</h3>
+                <div class="form-group">
+                    <label for="zipLookup">ZIP Code</label>
+                    <input type="text" id="zipLookup" placeholder="Enter 5-digit ZIP code" maxlength="5">
+                </div>
+                <button class="btn" onclick="lookupZip()">
+                    <span>Lookup Location</span>
+                </button>
+                <div id="zipResult" class="result"></div>
+            </div>
+
+            <!-- Area Code Lookup -->
+            <div class="tool-card">
+                <h3>📞 Area Code Lookup</h3>
+                <div class="form-group">
+                    <label for="areaCode">Area Code</label>
+                    <input type="text" id="areaCode" placeholder="Enter 3-digit area code" maxlength="3">
+                </div>
+                <button class="btn" onclick="lookupAreaCode()">
+                    <span>Lookup Area</span>
+                </button>
+                <div id="areaResult" class="result"></div>
+            </div>
+
+            <!-- Email Validator -->
+            <div class="tool-card">
+                <h3>📧 Email Validator</h3>
+                <div class="form-group">
+                    <label for="emailInput">Email Address</label>
+                    <input type="email" id="emailInput" placeholder="user@example.com">
+                </div>
+                <button class="btn" onclick="validateEmail()">
+                    <span>Validate Email</span>
+                </button>
+                <div id="emailResult" class="result"></div>
+            </div>
+
+            <!-- Password Generator -->
+            <div class="tool-card">
+                <h3>🔒 Password Generator</h3>
+                <div class="form-group">
+                    <label for="passwordLength">Password Length: <span id="lengthDisplay">12</span></label>
+                    <input type="range" id="passwordLength" min="8" max="50" value="12" oninput="updateLengthDisplay()">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="includeUpper" checked> Uppercase Letters (A-Z)</label><br>
+                    <label><input type="checkbox" id="includeLower" checked> Lowercase Letters (a-z)</label><br>
+                    <label><input type="checkbox" id="includeNumbers" checked> Numbers (0-9)</label><br>
+                    <label><input type="checkbox" id="includeSymbols"> Special Characters (!@#$)</label>
+                </div>
+                <button class="btn" onclick="generatePassword()">
+                    <span>Generate Password</span>
+                </button>
+                <div id="passwordResult" class="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Smooth scroll to sections
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+            
+            // Update active nav dot
+            document.querySelectorAll('.nav-dot').forEach(dot => dot.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // US States and Capitals data
+        const statesData = {
+            "Alabama": "Montgomery", "Alaska": "Juneau", "Arizona": "Phoenix", "Arkansas": "Little Rock",
+            "California": "Sacramento", "Colorado": "Denver", "Connecticut": "Hartford", "Delaware": "Dover",
+            "Florida": "Tallahassee", "Georgia": "Atlanta", "Hawaii": "Honolulu", "Idaho": "Boise",
+            "Illinois": "Springfield", "Indiana": "Indianapolis", "Iowa": "Des Moines", "Kansas": "Topeka",
+            "Kentucky": "Frankfort", "Louisiana": "Baton Rouge", "Maine": "Augusta", "Maryland": "Annapolis",
+            "Massachusetts": "Boston", "Michigan": "Lansing", "Minnesota": "Saint Paul", "Mississippi": "Jackson",
+            "Missouri": "Jefferson City", "Montana": "Helena", "Nebraska": "Lincoln", "Nevada": "Carson City",
+            "New Hampshire": "Concord", "New Jersey": "Trenton", "New Mexico": "Santa Fe", "New York": "Albany",
+            "North Carolina": "Raleigh", "North Dakota": "Bismarck", "Ohio": "Columbus", "Oklahoma": "Oklahoma City",
+            "Oregon": "Salem", "Pennsylvania": "Harrisburg", "Rhode Island": "Providence", "South Carolina": "Columbia",
+            "South Dakota": "Pierre", "Tennessee": "Nashville", "Texas": "Austin", "Utah": "Salt Lake City",
+            "Vermont": "Montpelier", "Virginia": "Richmond", "Washington": "Olympia", "West Virginia": "Charleston",
+            "Wisconsin": "Madison", "Wyoming": "Cheyenne"
+        };
+
+        const zipData = {
+            "10001": "New York, NY", "90210": "Beverly Hills, CA", "60601": "Chicago, IL",
+            "33101": "Miami, FL", "75201": "Dallas, TX", "02101": "Boston, MA",
+            "77001": "Houston, TX", "85001": "Phoenix, AZ", "19101": "Philadelphia, PA",
+            "30301": "Atlanta, GA", "98101": "Seattle, WA", "80201": "Denver, CO"
+        };
+
+        const areaCodeData = {
+            "212": "New York, NY", "310": "Los Angeles, CA", "312": "Chicago, IL",
+            "305": "Miami, FL", "214": "Dallas, TX", "617": "Boston, MA",
+            "713": "Houston, TX", "602": "Phoenix, AZ", "215": "Philadelphia, PA",
+            "404": "Atlanta, GA", "206": "Seattle, WA", "303": "Denver, CO"
+        };
+
+        // Initialize states dropdown
+        function initializeStates() {
+            const stateSelect = document.getElementById('stateSelect');
+            Object.keys(statesData).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        // Credit Card Validator with enhanced UI feedback
+        function validateCreditCard() {
+            const ccNumber = document.getElementById('ccNumber').value.replace(/\s/g, '');
+            const result = document.getElementById('ccResult');
+            const btn = event.target;
+            
+            if (!ccNumber) {
+                showResult('ccResult', '<div class="status-indicator error"></div>Please enter a credit card number', 'error');
+                return;
+            }
+
+            // Add loading state
+            btn.innerHTML = '<div class="loading"></div>Validating...';
+            
+            setTimeout(() => {
+                const isValid = luhnCheck(ccNumber);
+                const cardType = getCardType(ccNumber);
+                
+                if (isValid && cardType) {
+                    showResult('ccResult', `<div class="status-indicator"></div><strong>✅ Valid ${cardType} Card</strong><br>Card Number: ${formatCardNumber(ccNumber)}<br>Length: ${ccNumber.length} digits`, 'success');
+                } else {
+                    showResult('ccResult', `<div class="status-indicator error"></div><strong>❌ Invalid Credit Card</strong><br>Please check the number and try again`, 'error');
+                }
+                
+                btn.innerHTML = '<span>Validate Card</span>';
+            }, 800);
+        }
+
+        function formatCardNumber(number) {
+            return number.replace(/(.{4})/g, '$1 ').trim();
+        }
+
+        function luhnCheck(num) {
+            let sum = 0;
+            let isEven = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let digit = parseInt(num.charAt(i));
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
+        }
+
+        function getCardType(number) {
+            if (number.match(/^4/)) return 'Visa';
+            if (number.match(/^5[1-5]/)) return 'MasterCard';
+            if (number.match(/^3[47]/)) return 'American Express';
+            if (number.match(/^6/)) return 'Discover';
+            return null;
+        }
+
+        // Enhanced VIN Decoder
+        function decodeVIN() {
+            const vin = document.getElementById('vinNumber').value.toUpperCase();
+            const btn = event.target;
+            
+            if (vin.length !== 17) {
+                showResult('vinResult', '<div class="status-indicator error"></div>VIN must be exactly 17 characters', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Decoding...';
+            
+            setTimeout(() => {
+                const year = getVINYear(vin[9]);
+                const country = getVINCountry(vin[0]);
+                const manufacturer = getVINManufacturer(vin.substring(0, 3));
+                
+                showResult('vinResult', `
+                    <div class="status-indicator"></div>
+                    <strong>🚗 VIN Decoded Successfully</strong><br>
+                    <strong>VIN:</strong> ${vin}<br>
+                    <strong>Year:</strong> ${year}<br>
+                    <strong>Country:</strong> ${country}<br>
+                    <strong>Manufacturer:</strong> ${manufacturer}<br>
+                    <strong>Check Digit:</strong> ${vin[8]}
+                `, 'success');
+                
+                btn.innerHTML = '<span>Decode VIN</span>';
+            }, 1000);
+        }
+
+        function getVINYear(char) {
+            const yearCodes = {
+                'A': 2010, 'B': 2011, 'C': 2012, 'D': 2013, 'E': 2014, 
+                'F': 2015, 'G': 2016, 'H': 2017, 'J': 2018, 'K': 2019, 
+                'L': 2020, 'M': 2021, 'N': 2022, 'P': 2023, 'R': 2024
+            };
+            return yearCodes[char] || 'Unknown';
+        }
+
+        function getVINCountry(char) {
+            const countryCodes = {
+                '1': 'United States', '4': 'United States', '5': 'United States',
+                '2': 'Canada', '3': 'Mexico', 'J': 'Japan', 'K': 'South Korea',
+                'W': 'Germany', 'S': 'United Kingdom', 'Z': 'Italy'
+            };
+            return countryCodes[char] || 'Other';
+        }
+
+        function getVINManufacturer(wmi) {
+            const manufacturers = {
+                '1G1': 'Chevrolet', '1G6': 'Cadillac', '1FA': 'Ford',
+                '1GC': 'Chevrolet Truck', '1HD': 'Harley-Davidson',
+                '3VW': 'Volkswagen', '4T1': 'Toyota', '5NP': 'Hyundai'
+            };
+            return manufacturers[wmi] || 'Unknown Manufacturer';
+        }
+
+        // Enhanced BIN Checker
+        function checkBIN() {
+            const bin = document.getElementById('binNumber').value;
+            const btn = event.target;
+            
+            if (bin.length !== 6 || !/^\d+$/.test(bin)) {
+                showResult('binResult', '<div class="status-indicator error"></div>BIN must be exactly 6 digits', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Checking...';
+            
+            setTimeout(() => {
+                const cardType = getCardType(bin);
+                const bank = getBankName(bin);
+                const country = getBINCountry(bin);
+                
+                showResult('binResult', `
+                    <div class="status-indicator"></div>
+                    <strong>🏦 BIN Information</strong><br>
+                    <strong>BIN:</strong> ${bin}<br>
+                    <strong>Card Type:</strong> ${cardType || 'Unknown'}<br>
+                    <strong>Issuing Bank:</strong> ${bank}<br>
+                    <strong>Country:</strong> ${country}
+                `, 'success');
+                
+                btn.innerHTML = '<span>Check BIN</span>';
+            }, 800);
+        }
+
+        function getBankName(bin) {
+            const banks = {
+                '424242': 'Test Bank', '411111': 'Visa Test Bank',
+                '555555': 'MasterCard Test Bank', '450000': 'Chase Bank',
+                '400000': 'Wells Fargo', '510000': 'Bank of America'
+            };
+            return banks[bin] || 'Unknown Bank';
+        }
+
+        function getBINCountry(bin) {
+            // First digit indicates the card type and often the region
+            const firstDigit = bin[0];
+            if (['4', '5'].includes(firstDigit)) return 'United States';
+            return 'Various';
+        }
+
+        // Enhanced Time Zone Converter
+        function convertTime() {
+            const timeInput = document.getElementById('timeInput').value;
+            const fromTZ = document.getElementById('fromTZ').value;
+            const toTZ = document.getElementById('toTZ').value;
+            const btn = event.target;
+            
+            if (!timeInput) {
+                showResult('timeResult', '<div class="status-indicator error"></div>Please select a date and time', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Converting...';
+            
+            setTimeout(() => {
+                try {
+                    const date = new Date(timeInput);
+                    const options = {
+                        timeZone: toTZ,
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                        hour12: true
+                    };
+                    const convertedTime = new Intl.DateTimeFormat('en-US', options).format(date);
+                    const timeDiff = getTimeDifference(fromTZ, toTZ);
+                    
+                    showResult('timeResult', `
+                        <div class="status-indicator"></div>
+                        <strong>🌍 Time Converted</strong><br>
+                        <strong>Original:</strong> ${date.toLocaleString()} (${fromTZ.split('/')[1]})<br>
+                        <strong>Converted:</strong> ${convertedTime} (${toTZ.split('/')[1]})<br>
+                        <strong>Time Difference:</strong> ${timeDiff}
+                    `, 'success');
+                } catch (error) {
+                    showResult('timeResult', '<div class="status-indicator error"></div>Error converting time. Please check your input.', 'error');
+                }
+                
+                btn.innerHTML = '<span>Convert Time</span>';
+            }, 600);
+        }
+
+        function getTimeDifference(fromTZ, toTZ) {
+            const now = new Date();
+            const fromTime = new Intl.DateTimeFormat('en-US', { timeZone: fromTZ, hour12: false, hour: '2-digit' }).format(now);
+            const toTime = new Intl.DateTimeFormat('en-US', { timeZone: toTZ, hour12: false, hour: '2-digit' }).format(now);
+            const diff = parseInt(toTime) - parseInt(fromTime);
+            return diff > 0 ? `+${diff} hours` : `${diff} hours`;
+        }
+
+        // Enhanced Text Case Converter
+        function convertCase(type) {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text.trim()) {
+                showResult('textResult', '<div class="status-indicator error"></div>Please enter some text to convert', 'error');
+                return;
+            }
+
+            let result;
+            let description;
+            
+            switch (type) {
+                case 'upper':
+                    result = text.toUpperCase();
+                    description = 'All letters converted to UPPERCASE';
+                    break;
+                case 'lower':
+                    result = text.toLowerCase();
+                    description = 'All letters converted to lowercase';
+                    break;
+                case 'title':
+                    result = text.replace(/\w\S*/g, (txt) => 
+                        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                    description = 'First Letter Of Each Word Capitalized';
+                    break;
+                case 'sentence':
+                    result = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+                    description = 'First letter capitalized, rest lowercase';
+                    break;
+            }
+            
+            showResult('textResult', `
+                <div class="status-indicator"></div>
+                <strong>📝 ${description}</strong><br><br>
+                <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; font-family: monospace; word-break: break-all;">
+                    ${result}
+                </div>
+                <br><small>Characters: ${result.length} | Words: ${result.split(/\s+/).length}</small>
+            `, 'success');
+        }
+
+        // Enhanced States & Capitals
+        function showCapital() {
+            const state = document.getElementById('stateSelect').value;
+            const btn = event.target;
+            
+            if (!state) {
+                showResult('capitalResult', '<div class="status-indicator error"></div>Please select a state from the dropdown', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Loading...';
+            
+            setTimeout(() => {
+                const capital = statesData[state];
+                showResult('capitalResult', `
+                    <div class="status-indicator"></div>
+                    <strong>🗺️ State Information</strong><br>
+                    <strong>State:</strong> ${state}<br>
+                    <strong>Capital:</strong> ${capital}<br>
+                    <strong>Region:</strong> ${getStateRegion(state)}
+                `, 'success');
+                
+                btn.innerHTML = '<span>Show Capital</span>';
+            }, 500);
+        }
+
+        function getStateRegion(state) {
+            const regions = {
+                'California': 'West Coast', 'Texas': 'Southwest', 'Florida': 'Southeast',
+                'New York': 'Northeast', 'Illinois': 'Midwest', 'Georgia': 'Southeast'
+            };
+            return regions[state] || 'United States';
+        }
+
+        // Enhanced Address Formatter
+        function formatAddress() {
+            const line1 = document.getElementById('addressLine1').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const state = document.getElementById('state').value.trim().toUpperCase();
+            const zip = document.getElementById('zipCode').value.trim();
+            const btn = event.target;
+            
+            if (!line1 || !city || !state || !zip) {
+                showResult('addressResult', '<div class="status-indicator error"></div>Please fill in all address fields', 'error');
+                return;
+            }
+
+            if (state.length !== 2) {
+                showResult('addressResult', '<div class="status-indicator error"></div>State must be 2 characters (e.g., CA, NY, TX)', 'error');
+                return;
+            }
+
+            if (!/^\d{5}(-\d{4})?$/.test(zip)) {
+                showResult('addressResult', '<div class="status-indicator error"></div>ZIP code must be 5 digits (12345) or 9 digits (12345-6789)', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Formatting...';
+            
+            setTimeout(() => {
+                const formattedAddress = `${line1}<br>${city}, ${state} ${zip}`;
+                showResult('addressResult', `
+                    <div class="status-indicator"></div>
+                    <strong>🏠 Formatted US Address</strong><br><br>
+                    <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; font-family: monospace;">
+                        ${formattedAddress}
+                    </div>
+                    <br><small>✅ Address formatted according to USPS standards</small>
+                `, 'success');
+                
+                btn.innerHTML = '<span>Format Address</span>';
+            }, 600);
+        }
+
+        // Enhanced ZIP Code Lookup
+        function lookupZip() {
+            const zip = document.getElementById('zipLookup').value.trim();
+            const btn = event.target;
+            
+            if (!/^\d{5}$/.test(zip)) {
+                showResult('zipResult', '<div class="status-indicator error"></div>Please enter a valid 5-digit ZIP code', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Looking up...';
+            
+            setTimeout(() => {
+                const location = zipData[zip];
+                if (location) {
+                    showResult('zipResult', `
+                        <div class="status-indicator"></div>
+                        <strong>📮 ZIP Code Found</strong><br>
+                        <strong>ZIP Code:</strong> ${zip}<br>
+                        <strong>Location:</strong> ${location}<br>
+                        <strong>Type:</strong> Standard ZIP Code
+                    `, 'success');
+                } else {
+                    showResult('zipResult', `
+                        <div class="status-indicator error"></div>
+                        <strong>ZIP Code Not Found</strong><br>
+                        ZIP code ${zip} is not in our sample database.<br>
+                        <small>Note: This is a demo with limited data.</small>
+                    `, 'error');
+                }
+                
+                btn.innerHTML = '<span>Lookup Location</span>';
+            }, 800);
+        }
+
+        // Enhanced Area Code Lookup
+        function lookupAreaCode() {
+            const area = document.getElementById('areaCode').value.trim();
+            const btn = event.target;
+            
+            if (!/^\d{3}$/.test(area)) {
+                showResult('areaResult', '<div class="status-indicator error"></div>Please enter a valid 3-digit area code', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Looking up...';
+            
+            setTimeout(() => {
+                const location = areaCodeData[area];
+                if (location) {
+                    showResult('areaResult', `
+                        <div class="status-indicator"></div>
+                        <strong>📞 Area Code Found</strong><br>
+                        <strong>Area Code:</strong> ${area}<br>
+                        <strong>Location:</strong> ${location}<br>
+                        <strong>Type:</strong> Geographic Area Code
+                    `, 'success');
+                } else {
+                    showResult('areaResult', `
+                        <div class="status-indicator error"></div>
+                        <strong>Area Code Not Found</strong><br>
+                        Area code ${area} is not in our sample database.<br>
+                        <small>Note: This is a demo with limited data.</small>
+                    `, 'error');
+                }
+                
+                btn.innerHTML = '<span>Lookup Area</span>';
+            }, 800);
+        }
+
+        // Enhanced Email Validator
+        function validateEmail() {
+            const email = document.getElementById('emailInput').value.trim();
+            const btn = event.target;
+            
+            if (!email) {
+                showResult('emailResult', '<div class="status-indicator error"></div>Please enter an email address', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Validating...';
+            
+            setTimeout(() => {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const isValid = emailRegex.test(email);
+                
+                if (isValid) {
+                    const domain = email.split('@')[1];
+                    const domainType = getDomainType(domain);
+                    
+                    showResult('emailResult', `
+                        <div class="status-indicator"></div>
+                        <strong>✅ Valid Email Address</strong><br>
+                        <strong>Email:</strong> ${email}<br>
+                        <strong>Domain:</strong> ${domain}<br>
+                        <strong>Type:</strong> ${domainType}
+                    `, 'success');
+                } else {
+                    showResult('emailResult', `
+                        <div class="status-indicator error"></div>
+                        <strong>❌ Invalid Email Address</strong><br>
+                        Please check the format and try again.<br>
+                        <small>Valid format: user@domain.com</small>
+                    `, 'error');
+                }
+                
+                btn.innerHTML = '<span>Validate Email</span>';
+            }, 700);
+        }
+
+        function getDomainType(domain) {
+            const commonDomains = {
+                'gmail.com': 'Google Mail', 'yahoo.com': 'Yahoo Mail',
+                'outlook.com': 'Microsoft Outlook', 'hotmail.com': 'Microsoft Hotmail',
+                'apple.com': 'Apple iCloud', 'icloud.com': 'Apple iCloud'
+            };
+            return commonDomains[domain.toLowerCase()] || 'Custom Domain';
+        }
+
+        // Enhanced Password Generator
+        function generatePassword() {
+            const length = parseInt(document.getElementById('passwordLength').value);
+            const upper = document.getElementById('includeUpper').checked;
+            const lower = document.getElementById('includeLower').checked;
+            const numbers = document.getElementById('includeNumbers').checked;
+            const symbols = document.getElementById('includeSymbols').checked;
+            const btn = event.target;
+            
+            let chars = '';
+            if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (numbers) chars += '0123456789';
+            if (symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            if (!chars) {
+                showResult('passwordResult', '<div class="status-indicator error"></div>Please select at least one character type', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<div class="loading"></div>Generating...';
+            
+            setTimeout(() => {
+                let password = '';
+                for (let i = 0; i < length; i++) {
+                    password += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                const strength = getPasswordStrength(password);
+                const strengthColor = strength.level === 'Strong' ? '#10b981' : 
+                                    strength.level === 'Medium' ? '#f59e0b' : '#ef4444';
+                
+                showResult('passwordResult', `
+                    <div class="status-indicator"></div>
+                    <strong>🔒 Password Generated</strong><br><br>
+                    <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 1.1rem; word-break: break-all; border: 2px solid ${strengthColor};">
+                        ${password}
+                    </div>
+                    <br>
+                    <strong>Strength:</strong> <span style="color: ${strengthColor};">${strength.level}</span><br>
+                    <strong>Length:</strong> ${password.length} characters<br>
+                    <strong>Score:</strong> ${strength.score}/4<br>
+                    <button onclick="copyToClipboard('${password}')" style="margin-top: 0.5rem; padding: 0.5rem 1rem; background: var(--accent-color); border: none; border-radius: 8px; color: white; cursor: pointer;">
+                        Copy Password
+                    </button>
+                `, 'success');
+                
+                btn.innerHTML = '<span>Generate Password</span>';
+            }, 800);
+        }
+
+        function getPasswordStrength(password) {
+            let score = 0;
+            if (password.length >= 8) score++;
+            if (/[a-z]/.test(password)) score++;
+            if (/[A-Z]/.test(password)) score++;
+            if (/[0-9]/.test(password)) score++;
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+            
+            const levels = ['Very Weak', 'Weak', 'Fair', 'Strong', 'Very Strong'];
+            return { score: score, level: levels[Math.min(score, 4)] };
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Show temporary success message
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'var(--accent-color)';
+                }, 2000);
+            });
+        }
+
+        function updateLengthDisplay() {
+            document.getElementById('lengthDisplay').textContent = document.getElementById('passwordLength').value;
+        }
+
+        // Utility function to show results with enhanced animations
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = message;
+            element.className = `result ${type}`;
+            element.style.display = 'block';
+            
+            // Trigger animation
+            setTimeout(() => {
+                element.style.transform = 'translateY(0)';
+                element.style.opacity = '1';
+            }, 10);
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStates();
+            createParticles();
+            
+            // Set current time for time converter
+            const now = new Date();
+            const localISOTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, -1);
+            document.getElementById('timeInput').value = localISOTime;
+            
+            // Add scroll animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.tool-card').forEach(card => {
+                observer.observe(card);
+            });
+        });
+
+        // Format credit card input with spaces
+        document.getElementById('ccNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            if (formattedValue !== e.target.value) {
+                this.value = formattedValue;
+            }
+        });
+
+        // Format VIN input to uppercase
+        document.getElementById('vinNumber').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Format state input to uppercase
+        document.getElementById('state').addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase();
+        });
+
+        // Smooth scroll behavior for navigation
+        document.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-shape');
+            const speed = 0.5;
+            
+            parallax.forEach(shape => {
+                const yPos = -(scrolled * speed);
+                shape.style.transform = `translate3d(0, ${yPos}px, 0)`;
+            });
+        });
+    </script>
+</body>
+</html>

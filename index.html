@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox Pro - Online Utility Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .tool-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>ToolBox Pro</h1>
+        <p>Your all-in-one collection of online utility tools</p>
+    </header>
+
+    <div class="container">
+        <div class="tools-grid">
+            <!-- Credit Card Validator -->
+            <div class="tool-card">
+                <h3>💳 Credit Card Validator</h3>
+                <div class="form-group">
+                    <label for="ccNumber">Credit Card Number:</label>
+                    <input type="text" id="ccNumber" placeholder="Enter credit card number" maxlength="19">
+                </div>
+                <button class="btn" onclick="validateCreditCard()">Validate</button>
+                <div id="ccResult" class="result"></div>
+            </div>
+
+            <!-- VIN Decoder -->
+            <div class="tool-card">
+                <h3>🚗 VIN Decoder</h3>
+                <div class="form-group">
+                    <label for="vinNumber">VIN Number:</label>
+                    <input type="text" id="vinNumber" placeholder="Enter 17-character VIN" maxlength="17">
+                </div>
+                <button class="btn" onclick="decodeVIN()">Decode VIN</button>
+                <div id="vinResult" class="result"></div>
+            </div>
+
+            <!-- BIN Checker -->
+            <div class="tool-card">
+                <h3>🏦 BIN Checker</h3>
+                <div class="form-group">
+                    <label for="binNumber">BIN Number (First 6 digits):</label>
+                    <input type="text" id="binNumber" placeholder="Enter first 6 digits" maxlength="6">
+                </div>
+                <button class="btn" onclick="checkBIN()">Check BIN</button>
+                <div id="binResult" class="result"></div>
+            </div>
+
+            <!-- Time Zone Converter -->
+            <div class="tool-card">
+                <h3>🌍 Time Zone Converter</h3>
+                <div class="form-group">
+                    <label for="timeInput">Time:</label>
+                    <input type="datetime-local" id="timeInput">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="fromTZ">From Timezone:</label>
+                        <select id="fromTZ">
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Europe/London">London</option>
+                            <option value="Asia/Tokyo">Tokyo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="toTZ">To Timezone:</label>
+                        <select id="toTZ">
+                            <option value="America/New_York">Eastern Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                            <option value="UTC">UTC</option>
+                            <option value="Europe/London">London</option>
+                            <option value="Asia/Tokyo">Tokyo</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="convertTime()">Convert Time</button>
+                <div id="timeResult" class="result"></div>
+            </div>
+
+            <!-- Text Case Converter -->
+            <div class="tool-card">
+                <h3>📝 Text Case Converter</h3>
+                <div class="form-group">
+                    <label for="textInput">Enter Text:</label>
+                    <textarea id="textInput" rows="3" placeholder="Enter your text here..."></textarea>
+                </div>
+                <div class="grid-2">
+                    <button class="btn" onclick="convertCase('upper')">UPPERCASE</button>
+                    <button class="btn" onclick="convertCase('lower')">lowercase</button>
+                    <button class="btn" onclick="convertCase('title')">Title Case</button>
+                    <button class="btn" onclick="convertCase('sentence')">Sentence case</button>
+                </div>
+                <div id="textResult" class="result"></div>
+            </div>
+
+            <!-- US States & Capitals -->
+            <div class="tool-card">
+                <h3>🗺️ US States & Capitals</h3>
+                <div class="form-group">
+                    <label for="stateSelect">Select State:</label>
+                    <select id="stateSelect">
+                        <option value="">Choose a state...</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="showCapital()">Show Capital</button>
+                <div id="capitalResult" class="result"></div>
+            </div>
+
+            <!-- US Address Formatter -->
+            <div class="tool-card">
+                <h3>🏠 US Address Formatter</h3>
+                <div class="form-group">
+                    <label for="addressLine1">Street Address:</label>
+                    <input type="text" id="addressLine1" placeholder="123 Main St">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label for="city">City:</label>
+                        <input type="text" id="city" placeholder="City">
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State:</label>
+                        <input type="text" id="state" placeholder="State" maxlength="2">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zipCode">ZIP Code:</label>
+                    <input type="text" id="zipCode" placeholder="12345">
+                </div>
+                <button class="btn" onclick="formatAddress()">Format Address</button>
+                <div id="addressResult" class="result"></div>
+            </div>
+
+            <!-- ZIP Code Lookup -->
+            <div class="tool-card">
+                <h3>📮 ZIP Code Lookup</h3>
+                <div class="form-group">
+                    <label for="zipLookup">ZIP Code:</label>
+                    <input type="text" id="zipLookup" placeholder="Enter ZIP code" maxlength="5">
+                </div>
+                <button class="btn" onclick="lookupZip()">Lookup</button>
+                <div id="zipResult" class="result"></div>
+            </div>
+
+            <!-- Area Code Lookup -->
+            <div class="tool-card">
+                <h3>📞 Area Code Lookup</h3>
+                <div class="form-group">
+                    <label for="areaCode">Area Code:</label>
+                    <input type="text" id="areaCode" placeholder="Enter area code" maxlength="3">
+                </div>
+                <button class="btn" onclick="lookupAreaCode()">Lookup</button>
+                <div id="areaResult" class="result"></div>
+            </div>
+
+            <!-- Email Validator -->
+            <div class="tool-card">
+                <h3>📧 Email Validator</h3>
+                <div class="form-group">
+                    <label for="emailInput">Email Address:</label>
+                    <input type="email" id="emailInput" placeholder="Enter email address">
+                </div>
+                <button class="btn" onclick="validateEmail()">Validate Email</button>
+                <div id="emailResult" class="result"></div>
+            </div>
+
+            <!-- Password Generator -->
+            <div class="tool-card">
+                <h3>🔒 Random Password Generator</h3>
+                <div class="form-group">
+                    <label for="passwordLength">Password Length:</label>
+                    <input type="range" id="passwordLength" min="8" max="50" value="12" oninput="updateLengthDisplay()">
+                    <span id="lengthDisplay">12</span>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="includeUpper" checked> Uppercase Letters</label><br>
+                    <label><input type="checkbox" id="includeLower" checked> Lowercase Letters</label><br>
+                    <label><input type="checkbox" id="includeNumbers" checked> Numbers</label><br>
+                    <label><input type="checkbox" id="includeSymbols"> Special Characters</label>
+                </div>
+                <button class="btn" onclick="generatePassword()">Generate Password</button>
+                <div id="passwordResult" class="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // US States and Capitals data
+        const statesData = {
+            "Alabama": "Montgomery", "Alaska": "Juneau", "Arizona": "Phoenix", "Arkansas": "Little Rock",
+            "California": "Sacramento", "Colorado": "Denver", "Connecticut": "Hartford", "Delaware": "Dover",
+            "Florida": "Tallahassee", "Georgia": "Atlanta", "Hawaii": "Honolulu", "Idaho": "Boise",
+            "Illinois": "Springfield", "Indiana": "Indianapolis", "Iowa": "Des Moines", "Kansas": "Topeka",
+            "Kentucky": "Frankfort", "Louisiana": "Baton Rouge", "Maine": "Augusta", "Maryland": "Annapolis",
+            "Massachusetts": "Boston", "Michigan": "Lansing", "Minnesota": "Saint Paul", "Mississippi": "Jackson",
+            "Missouri": "Jefferson City", "Montana": "Helena", "Nebraska": "Lincoln", "Nevada": "Carson City",
+            "New Hampshire": "Concord", "New Jersey": "Trenton", "New Mexico": "Santa Fe", "New York": "Albany",
+            "North Carolina": "Raleigh", "North Dakota": "Bismarck", "Ohio": "Columbus", "Oklahoma": "Oklahoma City",
+            "Oregon": "Salem", "Pennsylvania": "Harrisburg", "Rhode Island": "Providence", "South Carolina": "Columbia",
+            "South Dakota": "Pierre", "Tennessee": "Nashville", "Texas": "Austin", "Utah": "Salt Lake City",
+            "Vermont": "Montpelier", "Virginia": "Richmond", "Washington": "Olympia", "West Virginia": "Charleston",
+            "Wisconsin": "Madison", "Wyoming": "Cheyenne"
+        };
+
+        // ZIP Code data (sample)
+        const zipData = {
+            "10001": "New York, NY", "90210": "Beverly Hills, CA", "60601": "Chicago, IL",
+            "33101": "Miami, FL", "75201": "Dallas, TX", "02101": "Boston, MA"
+        };
+
+        // Area Code data (sample)
+        const areaCodeData = {
+            "212": "New York, NY", "310": "Los Angeles, CA", "312": "Chicago, IL",
+            "305": "Miami, FL", "214": "Dallas, TX", "617": "Boston, MA"
+        };
+
+        // Initialize states dropdown
+        function initializeStates() {
+            const stateSelect = document.getElementById('stateSelect');
+            Object.keys(statesData).forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                stateSelect.appendChild(option);
+            });
+        }
+
+        // Credit Card Validator
+        function validateCreditCard() {
+            const ccNumber = document.getElementById('ccNumber').value.replace(/\s/g, '');
+            const result = document.getElementById('ccResult');
+            
+            if (!ccNumber) {
+                showResult('ccResult', 'Please enter a credit card number', 'error');
+                return;
+            }
+
+            const isValid = luhnCheck(ccNumber);
+            const cardType = getCardType(ccNumber);
+            
+            if (isValid && cardType) {
+                showResult('ccResult', `✅ Valid ${cardType} card`, 'success');
+            } else {
+                showResult('ccResult', '❌ Invalid credit card number', 'error');
+            }
+        }
+
+        function luhnCheck(num) {
+            let sum = 0;
+            let isEven = false;
+            for (let i = num.length - 1; i >= 0; i--) {
+                let digit = parseInt(num.charAt(i));
+                if (isEven) {
+                    digit *= 2;
+                    if (digit > 9) digit -= 9;
+                }
+                sum += digit;
+                isEven = !isEven;
+            }
+            return sum % 10 === 0;
+        }
+
+        function getCardType(number) {
+            if (number.match(/^4/)) return 'Visa';
+            if (number.match(/^5[1-5]/)) return 'MasterCard';
+            if (number.match(/^3[47]/)) return 'American Express';
+            if (number.match(/^6/)) return 'Discover';
+            return null;
+        }
+
+        // VIN Decoder
+        function decodeVIN() {
+            const vin = document.getElementById('vinNumber').value.toUpperCase();
+            const result = document.getElementById('vinResult');
+            
+            if (vin.length !== 17) {
+                showResult('vinResult', 'VIN must be exactly 17 characters', 'error');
+                return;
+            }
+
+            const year = getVINYear(vin[9]);
+            const country = getVINCountry(vin[0]);
+            
+            showResult('vinResult', `VIN: ${vin}<br>Year: ${year}<br>Country: ${country}<br>Check Digit: ${vin[8]}`, 'success');
+        }
+
+        function getVINYear(char) {
+            const yearCodes = {'A': 2010, 'B': 2011, 'C': 2012, 'D': 2013, 'E': 2014, 'F': 2015, 'G': 2016, 'H': 2017, 'J': 2018, 'K': 2019, 'L': 2020, 'M': 2021, 'N': 2022, 'P': 2023, 'R': 2024};
+            return yearCodes[char] || 'Unknown';
+        }
+
+        function getVINCountry(char) {
+            if (['1', '4', '5'].includes(char)) return 'United States';
+            if (['2'].includes(char)) return 'Canada';
+            if (['3'].includes(char)) return 'Mexico';
+            return 'Other';
+        }
+
+        // BIN Checker
+        function checkBIN() {
+            const bin = document.getElementById('binNumber').value;
+            
+            if (bin.length !== 6) {
+                showResult('binResult', 'BIN must be 6 digits', 'error');
+                return;
+            }
+
+            const cardType = getCardType(bin);
+            const bank = getBankName(bin);
+            
+            showResult('binResult', `BIN: ${bin}<br>Card Type: ${cardType || 'Unknown'}<br>Bank: ${bank}`, 'success');
+        }
+
+        function getBankName(bin) {
+            const banks = {
+                '424242': 'Test Bank',
+                '411111': 'Visa Test',
+                '555555': 'MasterCard Test'
+            };
+            return banks[bin] || 'Unknown Bank';
+        }
+
+        // Time Zone Converter
+        function convertTime() {
+            const timeInput = document.getElementById('timeInput').value;
+            const fromTZ = document.getElementById('fromTZ').value;
+            const toTZ = document.getElementById('toTZ').value;
+            
+            if (!timeInput) {
+                showResult('timeResult', 'Please select a date and time', 'error');
+                return;
+            }
+
+            try {
+                const date = new Date(timeInput);
+                const convertedTime = new Intl.DateTimeFormat('en-US', {
+                    timeZone: toTZ,
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                }).format(date);
+                
+                showResult('timeResult', `Converted Time: ${convertedTime} (${toTZ})`, 'success');
+            } catch (error) {
+                showResult('timeResult', 'Error converting time', 'error');
+            }
+        }
+
+        // Text Case Converter
+        function convertCase(type) {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text) {
+                showResult('textResult', 'Please enter some text', 'error');
+                return;
+            }
+
+            let result;
+            switch (type) {
+                case 'upper':
+                    result = text.toUpperCase();
+                    break;
+                case 'lower':
+                    result = text.toLowerCase();
+                    break;
+                case 'title':
+                    result = text.replace(/\w\S*/g, (txt) => 
+                        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+                    break;
+                case 'sentence':
+                    result = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+                    break;
+            }
+            
+            showResult('textResult', result, 'success');
+        }
+
+        // US States & Capitals
+        function showCapital() {
+            const state = document.getElementById('stateSelect').value;
+            
+            if (!state) {
+                showResult('capitalResult', 'Please select a state', 'error');
+                return;
+            }
+
+            const capital = statesData[state];
+            showResult('capitalResult', `The capital of ${state} is ${capital}`, 'success');
+        }
+
+        // Address Formatter
+        function formatAddress() {
+            const line1 = document.getElementById('addressLine1').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value.toUpperCase();
+            const zip = document.getElementById('zipCode').value;
+            
+            if (!line1 || !city || !state || !zip) {
+                showResult('addressResult', 'Please fill in all fields', 'error');
+                return;
+            }
+
+            const formattedAddress = `${line1}<br>${city}, ${state} ${zip}`;
+            showResult('addressResult', `Formatted Address:<br>${formattedAddress}`, 'success');
+        }
+
+        // ZIP Code Lookup
+        function lookupZip() {
+            const zip = document.getElementById('zipLookup').value;
+            
+            if (zip.length !== 5) {
+                showResult('zipResult', 'Please enter a 5-digit ZIP code', 'error');
+                return;
+            }
+
+            const location = zipData[zip];
+            if (location) {
+                showResult('zipResult', `ZIP ${zip}: ${location}`, 'success');
+            } else {
+                showResult('zipResult', `ZIP code ${zip} not found in database`, 'error');
+            }
+        }
+
+        // Area Code Lookup
+        function lookupAreaCode() {
+            const area = document.getElementById('areaCode').value;
+            
+            if (area.length !== 3) {
+                showResult('areaResult', 'Please enter a 3-digit area code', 'error');
+                return;
+            }
+
+            const location = areaCodeData[area];
+            if (location) {
+                showResult('areaResult', `Area Code ${area}: ${location}`, 'success');
+            } else {
+                showResult('areaResult', `Area code ${area} not found in database`, 'error');
+            }
+        }
+
+        // Email Validator
+        function validateEmail() {
+            const email = document.getElementById('emailInput').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!email) {
+                showResult('emailResult', 'Please enter an email address', 'error');
+                return;
+            }
+
+            if (emailRegex.test(email)) {
+                showResult('emailResult', '✅ Valid email address', 'success');
+            } else {
+                showResult('emailResult', '❌ Invalid email address', 'error');
+            }
+        }
+
+        // Password Generator
+        function generatePassword() {
+            const length = document.getElementById('passwordLength').value;
+            const upper = document.getElementById('includeUpper').checked;
+            const lower = document.getElementById('includeLower').checked;
+            const numbers = document.getElementById('includeNumbers').checked;
+            const symbols = document.getElementById('includeSymbols').checked;
+            
+            let chars = '';
+            if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+            if (numbers) chars += '0123456789';
+            if (symbols) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+            
+            if (!chars) {
+                showResult('passwordResult', 'Please select at least one character type', 'error');
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            
+            showResult('passwordResult', `Generated Password: <strong>${password}</strong>`, 'success');
+        }
+
+        function updateLengthDisplay() {
+            document.getElementById('lengthDisplay').textContent = document.getElementById('passwordLength').value;
+        }
+
+        // Utility function to show results
+        function showResult(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = message;
+            element.className = `result ${type}`;
+            element.style.display = 'block';
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeStates();
+            // Set current time for time converter
+            const now = new Date();
+            document.getElementById('timeInput').value = now.toISOString().slice(0, -1);
+        });
+
+        // Format credit card input
+        document.getElementById('ccNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+            this.value = formattedValue;
+        });
+    </script>
+</body>
+</html>
